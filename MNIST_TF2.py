@@ -10,8 +10,7 @@ batchsz = 512
 train_db = tf.data.Dataset.from_tensor_slices((x, y))
 
 def preprocess(x, y): 
-    # [b, 28, 28], [b]
-    print(x.shape,y.shape)
+    #print(x.shape,y.shape)
     x = tf.cast(x, dtype=tf.float32) / 255.
     x = tf.reshape(x, [-1, 28*28])
     y = tf.cast(y, dtype=tf.int32)
@@ -23,7 +22,6 @@ train_db = train_db.batch(batchsz)
 train_db = train_db.map(preprocess)
 train_db = train_db.repeat(20)
 
-#%%
 
 test_db = tf.data.Dataset.from_tensor_slices((x_test, y_test))
 test_db = test_db.shuffle(1000).batch(batchsz).map(preprocess)
@@ -69,7 +67,7 @@ for _ in range(10):
     grads = tape.gradient(loss, [w1, b1, w2, b2, w3, b3, w4, b4,w5,b5,w6,b6,w7,b7,w8,b8])
     for p, g in zip([w1, b1, w2, b2, w3, b3, w4, b4,w5,b5,w6,b6,w7,b7,w8,b8], grads):
       p.assign_sub(0.01 * g)
-    if step %80 == 0:
+    if step %100 == 0:
               # evaluate/test
               total, total_correct = 0., 0
 
@@ -100,4 +98,4 @@ for _ in range(10):
                   total_correct += tf.reduce_sum(tf.cast(correct, dtype=tf.int32)).numpy()
                   total += x.shape[0]
 
-              print(step, 'Evaluate Acc:', total_correct/total)
+              print(step, 'Acc:', total_correct/total)
